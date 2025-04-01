@@ -158,6 +158,44 @@ def increasingTriplet(self, nums: List[int]) -> bool:
                 return True 
         return False
 
+#Remove Element array manipluation
+def removeElement(self, nums: List[int], val: int) -> int:
+    res = 0
+    for i in range(len(nums)):
+        if nums[i] != val:
+            nums[res] = nums[i]
+            res+=1
+    return res
+
+#Minimum Size Subarray Sum
+# Given an array of positive integers nums and a positive integer target, return the min length of a subarray 
+# whose sum is greater than or equal to targer. If there is no such subarray, return 0 instead
+def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        left = 0
+        curr_sum = 0
+        res = float("inf")
+        for right in range(len(nums)):
+            curr_sum+=nums[right]
+            #print(nums[left:right], curr_sum)
+            while curr_sum >= target:
+                res = min(res, right-left+1)
+                curr_sum-=nums[left]
+                left+=1
+
+        return 0 if res == float("inf") else res
+
+#reverse an array list IN-PLACE
+def reverse(nums, left, right):
+    while left < right:
+        nums[left], nums[right] = nums[right], nums[left]
+        left += 1
+        right -= 1
+
+    # Example Usage
+    arr = [1,2,3,4,5,6,7]
+    rotate_array(arr, 3)
+    print(arr)  # Output: [5,6,7,1,2,3,4]
+
 #-----------------------------STRINGS-----------------------------------------
 # Is Sequence (EASY)
 # Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
@@ -340,7 +378,6 @@ def word_break(s, word_dict):
     print(word_break("leetcode", dictionary))  # True
     print(word_break("leetcodea", dictionary)) # False
 
-
 #----------------------------------------------HASHMAPS---------------------------------------------------
 # Contains Duplicate (EASY)
 # Using Hash sets to keep i o(n)
@@ -380,6 +417,99 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
         differences[num] = index
     return []
 
+#valid sudoku using hashsets
+def isValidSudoku(self, board: List[List[str]]) -> bool:
+    board_rows = defaultdict(set)
+    board_cols = defaultdict(set)
+    board_cube = defaultdict(set)
+
+    for row in range(9):
+        for col in range(9):
+            if board[row][col] == ".":
+                continue
+            if (board[row][col] in board_rows[row] or 
+            board[row][col] in board_cols[col] or 
+            board[row][col] in board_cube[(row // 3, col // 3)]):
+                return False
+            board_rows[row].add(board[row][col])
+            board_cols[col].add(board[row][col])
+            board_cube[(row // 3, col // 3)].add(board[row][col])
+
+            #print(board[row][col])
+        #print("end of the row ", row)
+    return True    
+
+# Maximum Number of Balloons
+# Given a string text, you want to use the characters of text to form as many instances of the word "balloon" as possible.
+# You can use each character in text at most once. Return the maximum number of instances that can be formed.
+def maxNumberOfBalloons(self, text: str) -> int:
+        text = text.lower()
+        mp: dict = {}
+        mp["b"] = 0
+        mp["a"] = 0
+        mp["l"] = 0
+        mp["o"] = 0
+        mp["n"] = 0
+        
+        # declare HashMap
+        for txt in text:
+            if txt in mp:
+                mp[txt] += 1
+        
+        # return min -> bottleneck
+        return min(mp["b"], mp["a"], mp["l"]//2, mp["o"]//2, mp["n"])
+
+# Number of good pairs
+# Given an array of integers nums, return the number of good pairs.
+# A pair (i, j) is called good if nums[i] == nums[j] and i < j.
+def numIdenticalPairs(self, nums: List[int]) -> int:
+        #hashmap to count the occurence of each number
+        count = Counter(nums) # n -> c
+        res = 0 
+        for n, c in count.items():
+            #formula for permuations
+            res += (c * (c-1)) // 2 
+        return res
+
+# Isomorphic Strings
+# Given two strings s and t, determine if they are isomorphic.
+# Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+def isIsomorphic(self, s: str, t: str) -> bool:
+        # count the letters in each string and then turn them into list
+        count1 = list(Counter(s).values())
+        count2 = list(Counter(t).values())
+
+        # check the count of each letter if they are equal to each other return true cause all replacements can be made
+        return count1 == count2
+
+# Ransom Notes (EASY)
+# Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
+# Each letter in magazine can only be used once in ransomNote
+def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        # creates a counter for the magazine and ransomNote
+        count1, count2 = Counter(ransomNote), Counter(magazine)
+        # we and the 2 list and if it returns the first counter then we can return true 
+        # this performs a intersection 
+        # if the count1 is the returned result then that implies that the randsomNote can be formed
+        if count1 & count2 == count1: 
+            return True
+        return False
+
+# Longest Consecutive sequence
+def longestConsecutive(self, nums: List[int]) -> int:
+    #changing it to a set will remove dulicates and sort it 
+    # this is O(n) time 
+    num_set = set(nums)
+    longest = 0 
+    for num in num_set:
+        if (num - 1) not in num_set:
+            length = 1
+            while (num + length) in num_set:
+                length += 1
+            longest = max(length, longest)
+    return longest
+
+#----------------------------------------------TWO POINTER---------------------------------------------------
 # Two Sum II with ordered list using two pointer method
 def twoSumII(self, nums: List[int], target: int) -> List[int]:
     left, right = 0, len(nums)-1
@@ -414,31 +544,66 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
                     left+=1
     return res
 
-#valid sudoku using hashsets
-def isValidSudoku(self, board: List[List[str]]) -> bool:
-    board_rows = defaultdict(set)
-    board_cols = defaultdict(set)
-    board_cube = defaultdict(set)
+# Container with the most water (Medium)
+def maxArea(self, height: List[int]) -> int:
+        res = 0
+        left, right = 0 , len(height)-1
+        while left < right:
+            area = (right - left) * min(height[left], height[right])
+            res = max(res, area)
+            if height[left] < height[right]:
+                left+=1
+            else:
+                right-=1
+        return res
 
-    for row in range(9):
-        for col in range(9):
-            if board[row][col] == ".":
-                continue
-            if (board[row][col] in board_rows[row] or 
-            board[row][col] in board_cols[col] or 
-            board[row][col] in board_cube[(row // 3, col // 3)]):
-                return False
-            board_rows[row].add(board[row][col])
-            board_cols[col].add(board[row][col])
-            board_cube[(row // 3, col // 3)].add(board[row][col])
+#trapping rain water (HARD)
+#Given n non-negative integers representing an elevation map where the width of each bar is 1, 
+#compute how much water it can trap after raining.
+def trap(self, height: List[int]) -> int:
+        if not height: return 0
+        left, right = 0, len(height)-1
+        leftMax, rightMax = height[left], height[right]
+        res = 0
 
-            #print(board[row][col])
-        #print("end of the row ", row)
-    return True    
+        while left < right:
+            if leftMax < rightMax:
+                left += 1
+                leftMax = max(leftMax, height[left])
+                res+= leftMax -height[left]
+            else:
+                right -= 1
+                rightMax = max(rightMax, height[right])
+                res+= rightMax -height[right]
+        return res
 
-#----------------------------------------------TWO POINTER---------------------------------------------------
+#Merge 2 arrays in sorted order (easy)
+def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        middle, next_largest, right =  m-1, n-1, m+n-1
+        while next_largest >=0:
+             
+#common Elements in 2 sorted list (2 pointer approach)
+def common_elements_sorted(a, b):
+    """
+    Return a list of common elements between two sorted lists a and b.
+    """
+    i, j = 0, 0
+    result = []
+    while i < len(a) and j < len(b):
+        if a[i] == b[j]:
+            result.append(a[i])
+            i += 1
+            j += 1
+        elif a[i] < b[j]:
+            i += 1
+        else:
+            j += 1
+    return result
 
-
+    # Example Usage
+    listA = [1,2,3,5,7,9]
+    listB = [2,3,4,5,10]
+    print(common_elements_sorted(listA, listB))  # [2,3,5]
 
 #----------------------------------------------PREFIX SUMS---------------------------------------------------
 #Range Sum Query - Immutable
@@ -566,91 +731,6 @@ def findMaxLength(self, nums: List[int]) -> int:
         return res 
 
 #---------------------------------------------KADANE'S ALGORITHM---------------------------------------------------
-
-#----------------------------------------------SLIDING WINDOW (FIXED SIZE)---------------------------------------------------
-# Maximum Average Subarray I
-
-# find all Anagrams in a String
-
-# Permutation in String
-
-
-#----------------------------------------------SLIDING WINDOW (DYNAMIC SIZE)---------------------------------------------------
-
-#----------------------------------------------lINKED LIST-------------------------------------------------
-#----------------------------------------------FAST AND SLOW POINTERS-------------------------------------------------
-
-#----------------------------------------------STACKS-------------------------------------------------
-
-#----------------------------------------------SORTS-------------------------------------------------
-
-#----------------------------------------------SEARCHS-------------------------------------------------
-
-#----------------------------------------------BACKTRACKING-------------------------------------------------
-
-#----------------------------------------------TREE TRAVERSAL BASICS-------------------------------------------------
-
-#----------------------------------------------HEAPS-------------------------------------------------
-
-#----------------------------------------------INTERVALS-------------------------------------------------
-
-
-
-#Carfleet Problem (medium)
-def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
-    pair = [(p, s) for p, s in zip(position, speed)]
-    pair.sort(reverse=True)
-    stack = []
-    for p, s in pair:  # Reverse Sorted Order
-        stack.append((target - p) / s)
-        if len(stack) >= 2 and stack[-1] <= stack[-2]:
-            stack.pop()
-    return len(stack)
-		
-#reversed Linked List
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-
-def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-    #first traverse to the last node
-    prev = None
-    curr = head
-
-    while curr:
-        temp = curr.next
-        curr.next = prev
-        prev = curr
-        curr = temp
-    return prev
-		
-#Remove Element array manipluation
-def removeElement(self, nums: List[int], val: int) -> int:
-    res = 0
-    for i in range(len(nums)):
-        if nums[i] != val:
-            nums[res] = nums[i]
-            res+=1
-    return res
-
-
-#longest Consecutive Sequence
-def longestConsecutive(self, nums: List[int]) -> int:
-    #changing it to a set will remove dulicates and sort it 
-    # this is O(n) time 
-    num_set = set(nums)
-    longest = 0 
-    for num in num_set:
-        if (num - 1) not in num_set:
-            length = 1
-            while (num + length) in num_set:
-                length += 1
-            longest = max(length, longest)
-    return longest
-
-
 # Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold
 def numOfSubarrays(self, arr: List[int], k: int, threshold: int) -> int:
     count = 0
@@ -665,24 +745,6 @@ def numOfSubarrays(self, arr: List[int], k: int, threshold: int) -> int:
         curr_sum -= arr[left]
     #print (curr_sum)
     return count
-
-
-#Minimum Size Subarray Sum
-# Given an array of positive integers nums and a positive integer target, return the min length of a subarray 
-# whose sum is greater than or equal to targer. If there is no such subarray, return 0 instead
-def minSubArrayLen(self, target: int, nums: List[int]) -> int:
-        left = 0
-        curr_sum = 0
-        res = float("inf")
-        for right in range(len(nums)):
-            curr_sum+=nums[right]
-            #print(nums[left:right], curr_sum)
-            while curr_sum >= target:
-                res = min(res, right-left+1)
-                curr_sum-=nums[left]
-                left+=1
-
-        return 0 if res == float("inf") else res
 
 # Maximum Subaaray
 # Given an integer array nums, find the subarray with the largest sum, and return its sum.
@@ -746,6 +808,12 @@ def maxScoreSightseeingPair(self, values: List[int]) -> int:
 
         return res
 
+
+#----------------------------------------------SLIDING WINDOW (FIXED SIZE)---------------------------------------------------
+
+
+#----------------------------------------------SLIDING WINDOW (DYNAMIC SIZE)---------------------------------------------------
+
 # Max Consecutive Ones III
 # Given a binary array nums and an integer k, 
 # return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
@@ -773,7 +841,28 @@ def longestOnes(self, nums: List[int], k: int) -> int:
 
         return max_w
 
-#linked List Cycle Detection (Fast and Slow Pointers)
+
+#----------------------------------------------lINKED LIST-------------------------------------------------
+#reversed Linked List
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    #first traverse to the last node
+    prev = None
+    curr = head
+
+    while curr:
+        temp = curr.next
+        curr.next = prev
+        prev = curr
+        curr = temp
+    return prev
+
+#linked List Cycle Detection (FAST AND SLOW POINTER)
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
@@ -789,61 +878,6 @@ def hasCycle(self, head: Optional[ListNode]) -> bool:
         if slow == fast:
             return True
     return False
-
-#Find the Minimum in a rotated array (using binary search)
-def findMin(self, nums: List[int]) -> int:
-    min_num = nums[0]
-    left, right = 0, len(nums)-1
-    while left <= right:
-        if nums[left] < nums[right]:
-            min_num = min(min_num, nums[left])
-            break
-        middle = (left + right) //2
-        min_num = min(min_num, nums[middle])
-        if nums[middle] >= nums[left]:
-            left = middle +1
-        else:
-            right = middle - 1
-    return min_num 
-
-
-#reverse an array list IN-PLACE
-def reverse(nums, left, right):
-    while left < right:
-        nums[left], nums[right] = nums[right], nums[left]
-        left += 1
-        right -= 1
-
-    # Example Usage
-    arr = [1,2,3,4,5,6,7]
-    rotate_array(arr, 3)
-    print(arr)  # Output: [5,6,7,1,2,3,4]
-
-
-#rectangle Overlap
-def rectangles_overlap(rec1, rec2):
-    """
-    Return True if rec1 overlaps with rec2; False otherwise.
-    rec1, rec2 are tuples like (x1, y1, x2, y2).
-    """
-    x1a, y1a, x2a, y2a = rec1
-    x1b, y1b, x2b, y2b = rec2
-    
-    # If one rectangle is entirely to the left or right => no overlap
-    if x2a <= x1b or x2b <= x1a:
-        return False
-    # If one rectangle is entirely above or below => no overlap
-    if y2a <= y1b or y2b <= y1a:
-        return False
-    
-    return True
-
-    # Example Usage
-    rectA = (0, 0, 2, 2)  # bottom-left=(0,0), top-right=(2,2)
-    rectB = (1, 1, 3, 3)
-    print(rectangles_overlap(rectA, rectB))  # True
-    rectC = (3,3,5,5)
-    print(rectangles_overlap(rectA, rectC))  # False
 
 #Linked List Sorting by Absolute value
 #Given a linked list containing possibly negative integers, sort it by the absolute value of its nodes.
@@ -880,28 +914,75 @@ def sort_by_abs(head):
     sorted_head = sort_by_abs(head)
     # Expected order by abs: [1, -2, 3, 5, -8]  # since abs(1)=1, abs(-2)=2, abs(3)=3, abs(5)=5, abs(-8)=8
 
-#common Elements in 2 sorted list (2 pointer approach)
-def common_elements_sorted(a, b):
-    """
-    Return a list of common elements between two sorted lists a and b.
-    """
-    i, j = 0, 0
-    result = []
-    while i < len(a) and j < len(b):
-        if a[i] == b[j]:
-            result.append(a[i])
-            i += 1
-            j += 1
-        elif a[i] < b[j]:
-            i += 1
+
+#----------------------------------------------STACKS-------------------------------------------------
+
+#----------------------------------------------SORTS-------------------------------------------------
+
+
+#----------------------------------------------SEARCH-------------------------------------------------
+
+#Find the Minimum in a rotated array (using binary search)
+def findMin(self, nums: List[int]) -> int:
+    min_num = nums[0]
+    left, right = 0, len(nums)-1
+    while left <= right:
+        if nums[left] < nums[right]:
+            min_num = min(min_num, nums[left])
+            break
+        middle = (left + right) //2
+        min_num = min(min_num, nums[middle])
+        if nums[middle] >= nums[left]:
+            left = middle +1
         else:
-            j += 1
-    return result
+            right = middle - 1
+    return min_num 
+
+
+#----------------------------------------------BACKTRACKING-------------------------------------------------
+
+#----------------------------------------------TREE TRAVERSAL BASICS-------------------------------------------------
+
+#----------------------------------------------HEAPS-------------------------------------------------
+
+#----------------------------------------------INTERVALS-------------------------------------------------
+
+#Carfleet Problem (medium)
+def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+    pair = [(p, s) for p, s in zip(position, speed)]
+    pair.sort(reverse=True)
+    stack = []
+    for p, s in pair:  # Reverse Sorted Order
+        stack.append((target - p) / s)
+        if len(stack) >= 2 and stack[-1] <= stack[-2]:
+            stack.pop()
+    return len(stack)
+		
+
+#rectangle Overlap
+def rectangles_overlap(rec1, rec2):
+    """
+    Return True if rec1 overlaps with rec2; False otherwise.
+    rec1, rec2 are tuples like (x1, y1, x2, y2).
+    """
+    x1a, y1a, x2a, y2a = rec1
+    x1b, y1b, x2b, y2b = rec2
+    
+    # If one rectangle is entirely to the left or right => no overlap
+    if x2a <= x1b or x2b <= x1a:
+        return False
+    # If one rectangle is entirely above or below => no overlap
+    if y2a <= y1b or y2b <= y1a:
+        return False
+    
+    return True
 
     # Example Usage
-    listA = [1,2,3,5,7,9]
-    listB = [2,3,4,5,10]
-    print(common_elements_sorted(listA, listB))  # [2,3,5]
+    rectA = (0, 0, 2, 2)  # bottom-left=(0,0), top-right=(2,2)
+    rectB = (1, 1, 3, 3)
+    print(rectangles_overlap(rectA, rectB))  # True
+    rectC = (3,3,5,5)
+    print(rectangles_overlap(rectA, rectC))  # False
 
 #Count Negatives in a sorted Matrix
 def count_negatives(matrix):
@@ -933,10 +1014,7 @@ def count_negatives(matrix):
     ]
     print(count_negatives(mat))  # e.g. 8
 
-#Merge 2 arrays in sorted order (easy)
-def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
-        middle, next_largest, right =  m-1, n-1, m+n-1
-        while next_largest >=0:
+
             if middle >= 0 and nums1[middle] > nums2[next_largest]:
                 nums1[right] = nums1[middle]
                 middle -=1
@@ -945,23 +1023,5 @@ def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
                 next_largest -= 1 
             right-=1
 
-#trapping rain water
-#Given n non-negative integers representing an elevation map where the width of each bar is 1, 
-#compute how much water it can trap after raining.
-def trap(self, height: List[int]) -> int:
-        if not height: return 0
-        left, right = 0, len(height)-1
-        leftMax, rightMax = height[left], height[right]
-        res = 0
 
-        while left < right:
-            if leftMax < rightMax:
-                left += 1
-                leftMax = max(leftMax, height[left])
-                res+= leftMax -height[left]
-            else:
-                right -= 1
-                rightMax = max(rightMax, height[right])
-                res+= rightMax -height[right]
-        return res
 
