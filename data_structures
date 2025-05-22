@@ -1,0 +1,128 @@
+horizontal scaling refers to adding additional nodes, (adding more servers or mahines to distribute the workload)
+vertical scaling describes adding more power to your current machines (adding cpu, ram or storage)
+
+''' Example Answer:
+To implement a stack using an array, I would use a dynamic array to store elements, providing O(1) time complexity for push and pop operations. For a linked list implementation, I would use a singly linked list, which offers the same O(1) time complexity but with more flexible memory usage."
+
+1. Identify the core components such as StackArray and StackLinkedList.
+2. Explain the methods for push, pop, and peek operations in both implementations.
+3. Discuss the trade-offs in terms of memory usage and performance between the array-based and linked list-based stacks.
+
+Arrays: Best for static-size or near-static collections with frequent random access.
+
+Queues: Ideal for FIFO processing (BFS, scheduling).
+
+Stacks: LIFO usage (DFS, backtracking, undo/redo).
+
+Linked Lists: Efficient insert/delete in the middle, but O(n) to find an element.
+
+HashMaps/HashSets: O(1) average lookup/insertion, best for quick membership checks or key-value relationships.
+
+Regular Dictionary {}:
+When you try to access a key that doesn't exist in a regular dictionary, it raises a KeyError. You need to explicitly check if a key exists before accessing it or use methods like .get() with a default value.
+
+Defaultdict():
+A defaultdict from the collections module automatically provides a default value for a missing key, avoiding KeyError. You specify a "default factory" function when creating the defaultdict, and this function is called to generate the default value whenever a missing key is accessed.
+
+
+'''
+    # Array Backed Linked List
+
+    # Stack Implemented Linked List 
+
+# TODO: ARRAYS
+    # Contiguous block of memory storing elements of the same type, fixed sized list strucutre
+    # Indexed elements for a o(1) access times
+    # Use-Case: when the size of the collection is known and does not change often, random access or direct accessing
+    # Pros: Excellent Cache Locally -> fast iteration o(n) to get all elements in list (access by index)
+    # Cons: Fixed sized unless, insertions and deletions is O(n) because of shifting of elements 
+    # USE when you need fast indexing and static collection, random accessing with index
+# TODO: lINKED lIST
+    # A sequence of nodes, each containing a ponter/ref to the next (double has next and prev)
+    # Pro: O(1) insertions and deletions if you have direct pointer to the node and no reallocation/copy needed for growth
+    # Con: O(n) access time if you must raverse to a certain element, worse cache(memory space) locality than arrays 
+    # Use Case: when insertion/deletion in the middle is frequent and orders matter or when implenting queues or stacks with minial overhead
+    # USE: for frequence middle insertion/deletions and dont need random accessing
+# TODO: ARRAYLIST
+    # Dynamic array that grows (sometimes shrinks) in size automatically as you add or remove elements
+    # using arraylist over array when you know you need to resize, this one is dynamic so you do not need to copy elimienets to grow
+# TODO: QUEUES
+    # A FIFO Structure and operations are enque (add to rear) and deque (remove from front) and peek (first elemet)
+    # Pros: Simple, logical structure for dquentually proccessing items in arrival order and O(1) enque and deque is implmented with linked list
+    # Cons: Random access is not straightforward, typically can only access from the rear or front
+    # Use-CASE: For BFS (breath first search) graph/trees, scheduling tasks (print que, cpu sheduling) and message processing (asynchronous data)
+    # USE: When you want FIFO ordering or when you need a structure that ensures the earliest item processed is the earliest inserted
+# TODO: STACKS
+    # A LIFO strucutre and operations are push (add to top), pop (remove top item), and peek (inspect from top)
+    # Pros: Very simple, push and pop are O(1) and great for reversing sequence (function call stack)
+    # Cons: Access is restricted to the TOP element only, no random access
+    # Use case: backtracking (undos), DFS (simulate recursion with stack), and checking balanced parentheses in strings
+    # USE: When you need LIFO odering or you need a structure to strictly process elements in reverse insertion order
+
+# TODO: HASHMAPS:
+    # stores key-value pairs providing O(1) insertions and lookup if hash function distributes them evenly
+    # Pro: very fast average-case lookup, insetion and deleation all o(1), flexible keys or item can be any objects with proper hash
+    # Cons: potential hash collisions that degrade performance O(n) worst case if not handled well and no gaurenteed order of elements
+    # use case: quick lookups by a key 
+    # USE: Need fast memebership checks (does candidate exist in data?) and need key-value relationships wit quick lookups and updates
+# TODO: HASHSET:
+    # Like a hashset but only stores unqiue values (no key-value keys), the rest is the same as hashmaps
+
+# Trees
+    # hierarchical storage. BST provide average O(logn) search/insert if balanced
+    # used for sorted data or range queries
+# Heaps/Priority Queues
+    # always can access max or min of an item in O(1) insertions are O(log n)
+    # great for schdueling task by priority or top-k queries 
+# Graph
+    # to represent networks or relationships between nodes
+    # BFS and DFS, shortest path alogorithms
+# Tries
+    # Often used for fast prefix lookups (auto complete)
+    # if asked in an interview ivolcing sttrings or dictions-based seraching
+# 
+'''
+class MyHashMap:
+
+    def __init__(self):
+        self.map = {}
+
+    def put(self, key: int, value: int) -> None:
+        self.map[key] = value
+
+    def get(self, key: int) -> int:
+        if key in self.map:
+            return self.map[key]
+        else:
+            return -1
+
+    def remove(self, key: int) -> None:
+        if key in self.map:
+            self.map.pop(key)
+
+class QueueUsingStacks:
+
+def __init__(self):
+
+self.stack1 = []
+
+self.stack2 = []
+
+def enqueue(self, item):
+
+self.stack1.append(item)
+
+def dequeue(self):
+
+if not self.stack2:
+
+while self.stack1:
+
+self.stack2.append(self.stack1.pop())
+
+return self.stack2.pop() if self.stack2 else None
+'''
+
+
+    
+

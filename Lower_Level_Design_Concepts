@@ -1,6 +1,22 @@
 Resources:
 https://github.com/ashishps1/awesome-low-level-design
 
+CREATIONAL PATTERNS:
+- Singleton Pattern is a creational design pattern that guarantees a class has only one instance and provides a global point of access to it. diagram reference: class 1 (client) -> singleton class (instance) <- class 2 (client)
+
+
+
+
+
+
+
+HOW TO ANSWER A LOWER LEVEL DESIGN PROBLEM
+Step 1: Clarify the Requirements
+Step 2: Identify the Entities
+Step 3: Class Design
+Step 4: Implementation 
+Step 5: Execiption Handling
+
 1. Design a parking lot
 2. Design a vending mahcine 
 3. Design an elevator system

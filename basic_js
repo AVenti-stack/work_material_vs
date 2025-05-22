@@ -1,0 +1,148 @@
+Language Basics
+Var(function scoped, only accesible in the function or globally if declared outside the function. Can be updated and redeclared within their scope) vs Let(blocked scooped only accesible within the block {} where they are defined, can be updated but not redefined within the same scope) vs const(blocked scooped only accesible within the block {} where they are defined. variables cannot be update or redeclared after assignment)
+Data types and types coercion (automatic conversion of a value form one data to another)
+	== (abstract equality, check for value equality) vs === (checks for type and value equality)
+	How does JS perform Coercion for null, unidentified vs NaN
+	console.log(5 == "5");   // true, because "5" is coerced to a number
+	console.log(5 === "5");  // false, because the types are different
+
+	console.log(null == undefined); // true, due to type coercion
+	console.log(null === undefined); // false, different types
+
+	console.log(0 == false); // true, boolean is coerced to number
+	console.log(0 === false); // false, different types
+Hoisting: where variable and function declarations are moved to the top of their scope before code execution
+
+Functions and Closure
+Closure:  a function that “remembers” its lexical scope, even if called in a different context. Interviewers may want an example, such as a function returning another function that captures a variable from the outer scope.
+
+this keyword: refers to the object that is currently executing the code. Its value is determined by how a function is called
+
+arrow functions:
+// Traditional function expression
+const add = function(a, b) {
+  return a + b;
+};
+
+// Arrow function equivalent
+const addArrow = (a, b) => a + b;
+
+Junit examples for python
+
+
+Example of Junit in Java
+
+/*
+ * JUnit is a popular unit testing framework for Java that helps you verify that your code works as expected.
+ * It uses annotations to mark test methods, setup methods, and more.
+ * Here’s how to create and use JUnit tests along with some common types of tests.
+ *
+ * 1. Adding JUnit to your Project:
+ *    - For Maven, add a dependency in your pom.xml:
+ *      <dependency>
+ *          <groupId>org.junit.jupiter</groupId>
+ *          <artifactId>junit-jupiter-engine</artifactId>
+ *          <version>5.9.2</version>
+ *          <scope>test</scope>
+ *      </dependency>
+ *
+ * 2. Writing a Basic Test Class:
+ *    - Create a test class (e.g., CalculatorTest.java) in your test source folder.
+ *    - Use annotations like @Test, @BeforeEach, @AfterEach.
+ *
+ * Example: Testing a simple Calculator class.
+ */
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+// Suppose we have a Calculator class with methods add, subtract, multiply, divide.
+class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}
+
+public class CalculatorTest {
+
+    private Calculator calc;
+
+    // This method runs before each test method.
+    @BeforeEach
+    public void setUp() {
+        calc = new Calculator();
+    }
+
+    // Positive test for addition.
+    @Test
+    public void testAddition() {
+        assertEquals(5, calc.add(2, 3), "2 + 3 should equal 5");
+    }
+
+    // Positive test for subtraction.
+    @Test
+    public void testSubtraction() {
+        assertEquals(1, calc.subtract(3, 2), "3 - 2 should equal 1");
+    }
+
+    // Positive test for multiplication.
+    @Test
+    public void testMultiplication() {
+        assertEquals(12, calc.multiply(3, 4), "3 * 4 should equal 12");
+    }
+
+    // Positive test for division.
+    @Test
+    public void testDivision() {
+        assertEquals(2, calc.divide(10, 5), "10 / 5 should equal 2");
+    }
+
+    // Negative test: division by zero should throw an exception.
+    @Test
+    public void testDivisionByZero() {
+        assertThrows(ArithmeticException.class, () -> {
+            calc.divide(10, 0);
+        }, "Division by zero should throw ArithmeticException");
+    }
+}
+
+/*
+ * 3. When to Write JUnit Tests:
+ *    - Write tests as you develop your code (Test-Driven Development is a common approach).
+ *    - Write unit tests to test individual methods or classes.
+ *    - Write integration tests when you need to verify interactions between multiple components.
+ *
+ * 4. Types of Tests to Write:
+ *    a. Unit Tests: Test individual units (methods or classes) in isolation.
+ *       - Example: testAddition(), testSubtraction(), etc.
+ *
+ *    b. Boundary Tests: Check edge cases and boundaries.
+ *       - Example: Testing divide() with zero as divisor.
+ *
+ *    c. Exception Tests: Verify that methods throw expected exceptions.
+ *       - Example: testDivisionByZero().
+ *
+ *    d. Integration Tests: Test how components work together (usually placed in separate test classes).
+ *
+ * 5. Best Practices:
+ *    - Each test should be independent.
+ *    - Use meaningful assertion messages.
+ *    - Use setup methods (@BeforeEach) to initialize common objects.
+ *    - Aim for high coverage of your critical code paths.
+ *
+ * Using JUnit helps ensure that changes in your code don’t break existing functionality.
+ * It provides rapid feedback and makes refactoring safer.
+ */

@@ -1,11 +1,132 @@
 #----------------------------------------------TOP K ELEMENTS -------------------------------------------------
+#reversed Linked List
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    #first traverse to the last node
+    prev = None
+    curr = head
+
+    while curr:
+        temp = curr.next
+        curr.next = prev
+        prev = curr
+        curr = temp
+    return prev
+
+# Intersection of Two Arrays
+# Given two integer arrays nums1 and nums2, return an array of their intersection. 
+# Each element in the result must be unique and you may return the result in any order.
+def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        return list(set(nums1)&set(nums2))
+
+# First unque character in a string
+# Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.
+def firstUniqChar(self, s: str) -> int:
+        count = defaultdict(int) # character -> count
+        for c in s:
+            # using a default dict count[c] will default to 0
+            # { } will give you a missing key error because "c" dne
+            count[c] = count[c] + 1
+        for i, c in enumerate(s):
+            # the first value in the dict with value 1 will get its index returned 
+            if count[c] == 1:
+                return i
+        return -1
+
+# valid palindrome
+class Palindrome:
+    def isPalindrome(self, s: str) -> bool:
+        # iterates through the input string and build new string check that contains only the alphanumeric characters
+        # coverts check string to all lowercase 
+        check = "".join([char.lower() for char in s if char.isalnum()])
+        # compare check with check in reverse to make sure that they are equal to each other
+        return check == check[::-1]
+
+# Popular Question Longest Substring Without Repeating Characters
+def lengthOfLongestSubstring(self, s: str) -> int:
+        #this is using sliding window
+        # will store the chars to make sure they do not repeat
+        char_set = set()
+        left = 0
+        res = 0 
+
+        #the right pointer will visit every char
+        for right in range(len(s)):
+            while s[right] in char_set:
+                char_set.remove(s[left])
+                left+=1
+            char_set.add(s[right])
+            #gets the current size of the longest sequence minus the dulplicate:right-left+1
+            res = max(res, right-left+1)
+        return res
+
 #Top K Frequent Elements total time would be O(n + k log k)
 def topKFrequent(self, nums: List[int], k: int) -> List[int]:
     #creates a counter to count the frequency of each number
     freqs = Counter(nums)  # o(n) time, goes through each element and count the occurences
     #this will return the array of most common numbers
     return [freq for freq,cnt in freqs.most_common(k)] #O(k log k)
-    
+
+# Merge Two Sorted List (Linked List)
+def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy_node = ListNode(-1) # create the dummy node, this will help handling node head
+        temp = dummy_node 
+        curr1, curr2 = list1,list2 # two pointers for list1 and list2 for curr node
+        #while the list are not empty we compare the values and add accordinly
+        while curr1 and curr2:
+            # we are adding the smaller value to the new list
+            if curr1.val < curr2.val:
+                temp.next = curr1
+                curr1 = curr1.next
+            # move the pointer of the list from which node it was taken forward
+            else:
+                temp.next = curr2
+                curr2 = curr2.next
+            temp = temp.next # increment holding the head
+        temp.next = curr1 if curr1 else curr2 # if one of the list not empty add on to the temp node
+        return dummy_node.next #return the dummy node. next cuase the dummy node is just the dummy node
+
+# ROTATE ARRAY (EASY) 
+# Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+# this was the one i did in the interview
+def rotate(self, nums: List[int], k: int) -> None:
+        n = len(nums)
+        # Since rotating ( n ) times brings the array back to its original state, 
+        # ( k ) can be reduced to ( k \mod n ).
+        k %= n 
+        # reverse the entire array
+        nums.reverse() # [7,6,5,4,3,2,1]
+        # reverse the elements from the start to k
+        nums[:k] = reversed(nums[:k]) # [5,6,7,4,3,2,1]
+        # now revesrse the elements from k to the end
+        nums[k:] = reversed(nums[k:]) # [5,6,7,1,2,3,4]
+
+# Combinations of given string
+def generate_combinations(s):
+
+    def backtrack(start, path):
+
+        combinations.append(''.join(path))
+
+        for i in range(start, len(s)):
+
+            path.append(s[i])
+
+            backtrack(i + 1, path)
+
+            path.pop()
+
+    combinations = []
+
+    backtrack(0, [])
+
+    return combinations
+
 
 #-----------------------ARRAYS-----------------------------------------------
 #Products of Array Except Itself (Medium)
@@ -32,21 +153,6 @@ def productExceptSelf(self, nums: List[int]) -> List[int]:
         right-=1       
 
     return res
-
-# ROTATE ARRAY (EASY) 
-# Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
-# this was the one i did in the interview
-def rotate(self, nums: List[int], k: int) -> None:
-        n = len(nums)
-        # Since rotating ( n ) times brings the array back to its original state, 
-        # ( k ) can be reduced to ( k \mod n ).
-        k %= n 
-        # reverse the entire array
-        nums.reverse() # [7,6,5,4,3,2,1]
-        # reverse the elements from the start to k
-        nums[:k] = reversed(nums[:k]) # [5,6,7,4,3,2,1]
-        # now revesrse the elements from k to the end
-        nums[k:] = reversed(nums[k:]) # [5,6,7,1,2,3,4]
 
 # Moves Zero (easy), inplace moves, swaps all zeros to the end while maintain the order of the other numbers
 # nums = [0,1,0,3,12] -> output = [1,3,12,0,0]
@@ -298,25 +404,6 @@ def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         anagrams[tuple(count)].append(s)
     return list(anagrams.values())
 
-#valid palindrome
-class Palindrome:
-    def isPalindrome(self, s: str) -> bool:
-        l, r = 0, len(s) - 1
-
-        while l < r:
-            while l < r and not self.alphaNum(s[l]):
-                l += 1
-            while r > l and not self.alphaNum(s[r]):
-                r -= 1
-            if s[l].lower() != s[r].lower():
-                return False
-            l, r = l + 1, r - 1
-        return True
-
-    def alphaNum(self, c):
-        return (ord('A') <= ord(c) <= ord('Z') or 
-                ord('a') <= ord(c) <= ord('z') or 
-                ord('0') <= ord(c) <= ord('9'))
 
 #longest substring without repeating characters
 #given a string s, find the length of the longest subdivision without duplicate characters
@@ -842,26 +929,7 @@ def longestOnes(self, nums: List[int], k: int) -> int:
         return max_w
 
 
-#----------------------------------------------lINKED LIST-------------------------------------------------
-#reversed Linked List
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-
-def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-    #first traverse to the last node
-    prev = None
-    curr = head
-
-    while curr:
-        temp = curr.next
-        curr.next = prev
-        prev = curr
-        curr = temp
-    return prev
-
+#----------------------------------------------lINKED LIST------------------------------------------------
 #linked List Cycle Detection (FAST AND SLOW POINTER)
 # Definition for singly-linked list.
 # class ListNode:
@@ -940,6 +1008,37 @@ def findMin(self, nums: List[int]) -> int:
 
 
 #----------------------------------------------BACKTRACKING-------------------------------------------------
+# Permutation in Sting
+# Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+# In other words, return true if one of s1's permutations is the substring of s2.
+def checkInclusion(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
+
+        s1_count = {}
+        s2_count = {}
+
+        for i in range(len(s1)):
+            s1_count[s1[i]] = 1 + s1_count.get(s1[i], 0)
+            s2_count[s2[i]] = 1 + s2_count.get(s2[i], 0)
+
+        if s1_count == s2_count:
+            return True
+
+        left = 0
+        for right in range(len(s1), len(s2)):
+            s2_count[s2[right]] = 1 + s2_count.get(s2[right], 0)
+            s2_count[s2[left]] -= 1
+
+            if s2_count[s2[left]] == 0:
+                del s2_count[s2[left]]
+
+            left += 1
+
+            if s1_count == s2_count:
+                return True
+
+        return False
 
 #----------------------------------------------TREE TRAVERSAL BASICS-------------------------------------------------
 

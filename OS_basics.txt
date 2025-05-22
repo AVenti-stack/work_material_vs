@@ -1,0 +1,171 @@
+"""
+CONCURRENCY AND SYNCHRONIZATION
+
+------------------------------
+Definition: Concurrency means that multiple threads or processes make progress at overlapping times.
+    - This does not necessarily mean they run simultaneously (unless there are multiple CPUs/cores).
+    - Concurrency introduces challenges when threads share resources.
+
+Use Case:
+    - When multiple threads/processes access or modify shared data (e.g., incrementing a global counter).
+
+Key Terms:
+    - Critical Section: A section of code that accesses shared resources that must not be concurrently accessed.
+    
+Race Condition:
+    - A bug that occurs when the correctness of a program depends on the precise timing of thread execution.
+    - Example: Two threads incrementing a counter concurrently may “race” and lose one update.
+    - Prevention: Use proper synchronization (e.g., locks) to serialize access.
+
+Mutex (Mutual Exclusion Lock):
+    - A synchronization primitive that allows only one thread at a time to execute a critical section.
+    - Properties: Binary (locked/unlocked) and ownership-based (only the locking thread can unlock).
+    - Use: Protect a single shared resource.
+    
+Semaphore:
+    - A synchronization mechanism with an internal counter.
+    - Two main operations:
+        • wait (P): Decrements the counter atomically. If the counter is 0, the thread blocks.
+        • signal (V): Increments the counter atomically.
+    - Types:
+        • Counting Semaphore: Allows up to N threads to access a resource.
+        • Binary Semaphore: Similar to a mutex, but without strict ownership.
+    - Key Difference: Any thread can signal a semaphore, while a mutex must be unlocked by its owner.
+    - Use: Coordinating tasks such as producer-consumer problems.
+    
+Mutex vs. Semaphore:
+    - Use a mutex when you need strict mutual exclusion on one resource.
+    - Use a semaphore for more general synchronization (e.g., controlling access to a pool of N resources).
+
+Deadlock:
+    - A situation in which two or more threads/processes are waiting for each other to release resources, so none can proceed.
+    - Conditions (Coffman Conditions):
+        1. Mutual Exclusion – Only one thread can use a resource at a time.
+        2. Hold and Wait – A thread holds one resource and waits for another.
+        3. No Preemption – Resources cannot be forcibly taken from a thread.
+        4. Circular Wait – A circular chain exists where each thread waits for a resource held by the next.
+    - Prevention: Break one of these conditions (e.g., enforce a fixed lock order, use timeouts).
+
+Starvation:
+    - A scenario where a thread never gets CPU time or resources because others are continuously prioritized.
+    - Common in systems with strict priority scheduling unless aging is used.
+
+------------------------------
+Example Interview Questions:
+    1. What is a race condition? Can you give an example and explain how to prevent it?
+    2. Explain the difference between a mutex and a semaphore.
+    3. What is a deadlock? What conditions lead to deadlock, and how would you avoid it?
+    4. Describe what a critical section is and how you would protect it.
+    5. Provide a scenario where a semaphore would be more appropriate than a mutex.
+
+------------------------------
+Memory Management: Stack vs. Heap, Paging, Segmentation
+
+Stack vs. Heap:
+    - Stack:
+        • Used for static memory allocation (local variables, function calls).
+        • Managed automatically (LIFO) and is fast.
+        • Each thread has its own stack, so it’s thread-safe.
+        • Limitations: Fixed size and risk of overflow.
+    - Heap:
+        • Used for dynamic memory allocation (objects created at runtime).
+        • Larger, but manually managed (via malloc/free in C or garbage collection in Java/Python).
+        • Can suffer from fragmentation and is generally slower.
+    
+Dynamic Allocation:
+    - Allows programs to request and free memory at runtime.
+    - Improper management can lead to memory leaks or dangling pointers.
+
+Paging:
+    - Divides physical memory into fixed-size frames and logical memory into pages.
+    - Uses a page table to map virtual pages to physical frames.
+    - Pros: Simplifies memory allocation; avoids external fragmentation.
+    - Cons: May cause internal fragmentation (unused space within a page).
+
+Segmentation:
+    - Divides memory into variable-sized segments (e.g., code, data, stack).
+    - Provides a logical view that can match program structure.
+    - Pros: Can be more intuitive for programmers.
+    - Cons: Can suffer from external fragmentation.
+
+------------------------------
+Example Interview Questions:
+    1. What is the difference between stack and heap memory?
+    2. Explain how dynamic memory allocation works and what issues might arise.
+    3. Define paging and segmentation. How do they differ regarding fragmentation?
+    4. What is internal vs. external fragmentation, and which memory management scheme causes each?
+    5. How do page tables work, and what happens on a page fault?
+
+------------------------------
+CPU Scheduling Algorithms
+    - FCFS (First-Come, First-Served):
+        • Processes run in the order they arrive.
+        • Simple but can lead to the convoy effect.
+    - SJF (Shortest Job First):
+        • Executes the process with the smallest burst time next.
+        • Optimizes average waiting time but can lead to starvation.
+    - Round Robin (RR):
+        • Each process gets a fixed time slice (quantum) in cyclic order.
+        • Ensures fairness; the quantum’s size is critical for performance.
+    - Priority Scheduling:
+        • Processes are scheduled based on priority.
+        • Can be preemptive; however, may cause starvation of lower-priority processes.
+    
+------------------------------
+Example Interview Questions:
+    1. How does Round Robin scheduling work, and what is the role of the time quantum?
+    2. What scheduling algorithm can cause the convoy effect, and why?
+    3. How can priority scheduling lead to starvation, and how can it be mitigated?
+
+------------------------------
+Virtual Memory and Paging
+    - Virtual Memory:
+        • Provides the illusion of a large memory by using disk space to extend RAM.
+    - Paging:
+        • Breaks memory into pages (logical) and frames (physical).
+        • Uses a page table for mapping; can lead to internal fragmentation.
+    - Segmentation:
+        • Divides memory based on logical segments with variable sizes.
+        • Can suffer from external fragmentation.
+    - Swapping and Page Faults:
+        • If a page is not in RAM, a page fault occurs, triggering the OS to swap pages between RAM and disk.
+        • Frequent page faults can lead to thrashing.
+    
+------------------------------
+Example Interview Questions:
+    1. What is virtual memory and why is it useful?
+    2. Explain the function of a page table.
+    3. What happens during a page fault?
+    4. Define swapping and its role in memory management.
+    5. How does a TLB improve memory access performance?
+    6. What is thrashing, and how can it be prevented?
+
+------------------------------
+System Calls and Kernel vs. User Mode
+    - User Mode:
+        • Runs application code with restricted privileges.
+    - Kernel Mode:
+        • Runs OS code with full access to hardware and system resources.
+    - System Calls:
+        • Interfaces that allow user applications to request services from the OS.
+        • Involve a mode switch (user to kernel) and are more costly than normal function calls.
+    
+------------------------------
+Example Interview Questions:
+    1. What is a system call and how does it differ from a regular function call?
+    2. Why do we need both user mode and kernel mode?
+    3. Describe what happens when a user calls read() on a file descriptor.
+    4. What happens if a user-mode program accesses an invalid memory address?
+    5. How does the OS transition from user mode to kernel mode during a system call?
+
+------------------------------
+General Advice for Interviews:
+- Be clear on definitions (race condition, critical section, deadlock, etc.).
+- Discuss trade-offs between different synchronization mechanisms.
+- Use concrete examples (e.g., incrementing a shared counter) to illustrate your points.
+- For memory management, be prepared to explain both high-level concepts and low-level details (like page tables and TLBs).
+- Explain how CPU scheduling and system calls impact application performance.
+- Always mention how you would design for scalability and fault tolerance in a real-world scenario.
+"""
+
+# End of Concurrency and Memory Management Summary
